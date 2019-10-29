@@ -12,6 +12,8 @@ const config = {
     appId: "1:69539150471:web:97d2ccfc0b68b917f49622"
   };
 
+  firebase.initializeApp(config);
+
   export const createUserProfileDocument = async (userAuth, additionalData) => {
     if(!userAuth) return;
 
@@ -37,6 +39,19 @@ const config = {
       }
     }
       return userRef;
+  };
+
+  export const getUserCartRef = async userId => {
+    const cartsRef = firestore.collection('carts').where('userId', '==', userId);
+    const snapShot = await cartsRef.get();
+  
+    if (snapShot.empty) {
+      const cartDocRef = firestore.collection('carts').doc();
+      await cartDocRef.set({ userId, cartItems: [] });
+      return cartDocRef;
+    } else {
+      return snapShot.docs[0].ref;
+    }
   };
 
   export const addCollectionsAndDocuments = async (collectionKey, objectsToAdd) => { //Funcion para agregar colleciones a firebase, no la usamos mas. 157
@@ -71,8 +86,6 @@ const config = {
       return acumulator;
     } , {});
   };
-
-  firebase.initializeApp(config);
 
   export const getCurrentUser = () => {
     return new Promise((resolve, reject) => {

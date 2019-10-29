@@ -31,14 +31,21 @@ const cartReducer = (state = INITIAL_STATE, action) => {
                 ...state,
                 cartItems: removeItemFromCart(state.cartItems, action.payload)
             };
+
         case CartActionTypes.CLEAR_CART:
             return {
                 ...state,
                 cartItems: []
-            }
+            };
+
+        case CartActionTypes.SET_CART_FROM_FIREBASE:
+            return {
+                  ...state,
+                  cartItems: action.payload
+                };
             default:
                 return state;
     }
-}
+};
 
 export default cartReducer;
